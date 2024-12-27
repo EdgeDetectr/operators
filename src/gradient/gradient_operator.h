@@ -29,7 +29,7 @@ public:
      *
      * @return The name of the operator.
      */
-    virtual std::string getOperatorName() const = 0;
+    [[nodiscard]] virtual std::string getOperatorName() const = 0;
 };
 
 #endif // GRADIENT_OPERATOR_H

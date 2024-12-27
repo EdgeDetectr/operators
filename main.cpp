@@ -1,9 +1,8 @@
-#include "include/main.h"
 #include <iostream>
-#include <opencv2/opencv.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include "src/gradient/gradient_operator.h"
-#include "src/gradient/sobel.h"
+#include "gradient/sobel.h"
+#include "gradient/alt_sobel.h"
 #include <filesystem>
 using namespace std;
 
@@ -28,14 +27,10 @@ int main() {
         GradientOperator* operatorPtr = nullptr;
 
         // Example: Use Sobel Operator
-        operatorPtr = new Sobel();
+        operatorPtr = new AltSobel();
 
         // Apply the Sobel operator
         cv::Mat edgeDetectedImage = operatorPtr->getEdges(inputPath, outputPath);
-
-        // Save the output image
-        cv::imwrite(outputPath, edgeDetectedImage);
-        std::cout << "Edge-detected image saved to: " << outputPath << std::endl;
     } catch (const std::exception& ex) {
         std::cerr << "Error: " << ex.what() << std::endl;
         return 1;

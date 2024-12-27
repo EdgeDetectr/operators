@@ -13,9 +13,14 @@ include_directories(src)
 add_executable(operators
         include/main.h
         src/gradient/sobel.cpp
-        src/gradient/sobel.h
+        include/gradient/sobel.h
         main.cpp
         src/gradient/gradient_operator.h
+        src/gradient/alt_sobel.cpp
+        include/gradient/alt_sobel.h
+        src/utils/image_utils.cpp
+        include/utils/image_utils.h
+        include/utils/sobel_util.h
 )
 
 target_link_libraries(operators ${OpenCV_LIBS})

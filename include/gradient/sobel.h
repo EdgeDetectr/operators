@@ -1,7 +1,7 @@
-#ifndef SOBEL_H
-#define SOBEL_H
+#ifndef OPERATORS_SOBEL_H
+#define OPERATORS_SOBEL_H
 
-#include "gradient_operator.h"
+#include "gradient/gradient_operator.h"
 
 #include <opencv2/opencv.hpp>
 
@@ -23,16 +23,9 @@ public:
     explicit Sobel(int kernelSize = 3);
 
     cv::Mat getEdges(const std::string& inputPath, const std::string& outputName) override;
-    std::string getOperatorName() const override;
+    [[nodiscard]] std::string getOperatorName() const override;
 
 private:
-
-    /**
-     * @brief Reads an image from the specified file.
-     * @param inputPath The path to the input image.
-     * @return The image.
-     */
-    static cv::Mat getImage(const std::string &inputPath);
 
     /**
      * @brief Converts the input image to RGB.
@@ -49,25 +42,18 @@ private:
     static cv::Mat convertToGrayscale(const cv::Mat& input);
 
     /**
-     * @brief Writes an image to the specified file.
-     * @param image The image to write.
-     * @param filename The name of the output file.
-     */
-    static void writeImage(const cv::Mat& image, const std::string& outputName);
-
-    /**
      * @brief Computes the gradient in the x-direction.
      * @param input The input image.
      * @return The gradient in the x-direction.
      */
-    cv::Mat computeGradientX(const cv::Mat& input) const;
+    [[nodiscard]] cv::Mat computeGradientX(const cv::Mat& input) const;
 
     /**
      * @brief Computes the gradient in the y-direction.
      * @param input The input image.
      * @return The gradient in the y-direction.
      */
-    cv::Mat computeGradientY(const cv::Mat& input) const;
+    [[nodiscard]] cv::Mat computeGradientY(const cv::Mat& image) const;
 
     /**
      * @brief Combines the gradients in the x and y directions.
@@ -78,4 +64,4 @@ private:
     static cv::Mat combineGradients(const cv::Mat& gradX, const cv::Mat& gradY);
 };
 
-#endif //SOBEL_H
+#endif //OPERATORS_SOBEL_H

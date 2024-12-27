@@ -1,4 +1,5 @@
-#include "sobel.h"
+#include "../include/gradient/sobel.h"
+#include "../include/utils/image_utils.h"
 
 Sobel::Sobel(int kernelSize) : ksize(kernelSize), scale(1), delta(0) {}
 
@@ -7,28 +8,14 @@ std::string Sobel::getOperatorName() const {
 }
 
 cv::Mat Sobel::getEdges(const std::string& inputPath, const std::string& outputName) {
-    cv::Mat image = getImage(inputPath);
+    cv::Mat image = ImageUtils::getImage(inputPath);
     cv::Mat rgbImage = convertToRGB(image);
     cv::Mat grayImage = convertToGrayscale(rgbImage);
     cv::Mat gradX = computeGradientX(grayImage);
     cv::Mat gradY = computeGradientY(grayImage);
     cv::Mat edges = combineGradients(gradX, gradY);
-    writeImage(edges, outputName);
+    ImageUtils::writeImage(edges, outputName);
     return edges;
-}
-
-cv::Mat Sobel::getImage(
-        const std::string &inputPath
-) {
-    cv:: Mat image = cv::imread(inputPath, cv::IMREAD_COLOR);
-    if (image.empty()) {
-        throw std::runtime_error("Could not read the image: " + inputPath);
-    }
-    return image;
-}
-
-void Sobel::writeImage(const cv::Mat& image, const std::string& outputName) {
-    cv::imwrite(outputName, image);
 }
 
 cv::Mat Sobel::convertToRGB(const cv::Mat& image) {
