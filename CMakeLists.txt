@@ -21,6 +21,8 @@ add_executable(operators
         src/utils/image_utils.cpp
         include/utils/image_utils.h
         include/utils/sobel_util.h
+        src/utils/path_helper.cpp
+        include/utils/path_helper.h
 )
 
 target_link_libraries(operators ${OpenCV_LIBS})
