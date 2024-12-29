@@ -24,6 +24,8 @@ add_executable(operators
         include/utils/sobel_util.h
         src/utils/path_helper.cpp
         include/utils/path_helper.h
+        cuda/gradient/sobel_cuda.cu
+        include/gradient/sobel_cuda.cuh
 )
 
 target_link_libraries(operators ${OpenCV_LIBS})
