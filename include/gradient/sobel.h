@@ -1,12 +1,13 @@
 #ifndef OPERATORS_SOBEL_H
 #define OPERATORS_SOBEL_H
 
-#include "gradient/gradient_operator.h"
-
+#include "gradient_operator.h"
 #include <opencv2/opencv.hpp>
+using namespace std;
+using namespace cv;
 
 /**
- * @file Sobel.h
+ * @file sobel.h
  * @brief This file contains the declaration of the Sobel class.
  */
 class Sobel : public GradientOperator {
@@ -22,8 +23,8 @@ public:
      */
     explicit Sobel(int kernelSize = 3);
 
-    cv::Mat getEdges(const std::string& inputPath, const std::string& outputName) override;
-    [[nodiscard]] std::string getOperatorName() const override;
+    Mat getEdges(const string& inputPath, const string& outputName) override;
+    [[nodiscard]] string getOperatorName() const override;
 
 private:
 
@@ -32,28 +33,28 @@ private:
      * @param input The input image.
      * @return The image in RGB format.
      */
-    static cv::Mat convertToRGB(const cv::Mat& input);
+    static Mat convertToRGB(const Mat& input);
 
     /**
      * @brief Converts the input image to grayscale.
      * @param input The input image.
      * @return The image in grayscale format.
      */
-    static cv::Mat convertToGrayscale(const cv::Mat& input);
+    static Mat convertToGrayscale(const Mat& input);
 
     /**
      * @brief Computes the gradient in the x-direction.
      * @param input The input image.
      * @return The gradient in the x-direction.
      */
-    [[nodiscard]] cv::Mat computeGradientX(const cv::Mat& input) const;
+    [[nodiscard]] Mat computeGradientX(const Mat& input) const;
 
     /**
      * @brief Computes the gradient in the y-direction.
      * @param input The input image.
      * @return The gradient in the y-direction.
      */
-    [[nodiscard]] cv::Mat computeGradientY(const cv::Mat& image) const;
+    [[nodiscard]] Mat computeGradientY(const Mat& image) const;
 
     /**
      * @brief Combines the gradients in the x and y directions.
@@ -61,7 +62,7 @@ private:
      * @param gradY The gradient in the y-direction.
      * @return The combined gradients.
      */
-    static cv::Mat combineGradients(const cv::Mat& gradX, const cv::Mat& gradY);
+    static Mat combineGradients(const Mat& gradX, const Mat& gradY);
 };
 
 #endif //OPERATORS_SOBEL_H

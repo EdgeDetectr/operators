@@ -8,6 +8,8 @@ std::string Sobel::getOperatorName() const {
 }
 
 cv::Mat Sobel::getEdges(const std::string& inputPath, const std::string& outputName) {
+    clock_t t = clock();
+
     cv::Mat image = ImageUtils::getImage(inputPath);
     cv::Mat rgbImage = convertToRGB(image);
     cv::Mat grayImage = convertToGrayscale(rgbImage);
@@ -15,6 +17,9 @@ cv::Mat Sobel::getEdges(const std::string& inputPath, const std::string& outputN
     cv::Mat gradY = computeGradientY(grayImage);
     cv::Mat edges = combineGradients(gradX, gradY);
     ImageUtils::writeImage(edges, outputName);
+
+    printf("Time taken: %.4fs\n", (float)(clock() - t)/CLOCKS_PER_SEC);
+
     return edges;
 }
 

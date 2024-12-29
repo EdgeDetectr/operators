@@ -1,24 +1,29 @@
 #include <iostream>
 #include <opencv2/imgcodecs.hpp>
-#include "src/gradient/gradient_operator.h"
+#include "gradient/gradient_operator.h"
 #include "gradient/sobel.h"
 #include "gradient/alt_sobel.h"
 #include "utils/path_helper.h"
 using namespace std;
 
+void applyOperator(GradientOperator* operatorPtr, const string& inputPath, const string& outputPath) {
+    cout << operatorPtr->getOperatorName() << " operator: " << endl;
+    operatorPtr->getEdges(inputPath, outputPath);
+    delete operatorPtr;
+}
+
 int main() {
     try {
-        std::string projectPath = PathHelper::getProjectPath();
-        std::string inputPath = projectPath + "/test/gradient/datasets/photo.jpg";
-        std::string outputPath = "output.png";
+        string projectPath = PathHelper::getProjectPath();
+        string inputPath = projectPath + "/test/gradient/datasets/photo.jpg";
+        string outputPath = "output.png";
 
-        GradientOperator* operatorPtr = nullptr;
-
-        operatorPtr = new AltSobel();
-
-        cv::Mat edgeDetectedImage = operatorPtr->getEdges(inputPath, outputPath);
-    } catch (const std::exception& ex) {
-        std::cerr << "Error: " << ex.what() << std::endl;
+//        sobel
+        applyOperator(new Sobel(), inputPath, outputPath);
+//        alt sobel
+        applyOperator(new AltSobel(), inputPath, outputPath);
+    } catch (const exception& ex) {
+        cerr << "Error: " << ex.what() << endl;
         return 1;
     }
 

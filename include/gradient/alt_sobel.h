@@ -3,6 +3,7 @@
 
 #include "gradient/gradient_operator.h"
 using namespace std;
+using namespace cv;
 
 class AltSobel : public GradientOperator {
 private:
@@ -26,7 +27,7 @@ public:
      * @throws runtime_error if the input image is empty.
      * @return The image with the edges detected.
      */
-    cv::Mat getEdges(const string& inputPath, const string& outputName) override;
+    Mat getEdges(const string& inputPath, const string& outputName) override;
 
     /**
      * @brief Get the name of the operator.
@@ -42,7 +43,7 @@ private:
      * @param input The input image.
      * @return The image in RGB format represented in a 3D vector.
      */
-     vector<vector<vector<uint8_t>>> convertToRGB(const cv::Mat& input) const;
+     vector<vector<vector<uint8_t>>> convertToRGB(const Mat& input) const;
 
     /**
      * @brief Converts the input image to grayscale.
@@ -73,7 +74,7 @@ private:
      * @param gradY The gradient in the y-direction.
      * @return The combined gradients.
      */
-    cv::Mat combineGradients(const vector<vector<int>>& gradX, const vector<vector<int>>& gradY) const;
+    Mat combineGradients(const vector<vector<int>>& gradX, const vector<vector<int>>& gradY) const;
 };
 
 

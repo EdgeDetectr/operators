@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(OpenCV REQUIRED)
 
 include_directories(${OpenCV_INCLUDE_DIRS})
+include_directories(cuda)
 include_directories(include)
 include_directories(src)
 
@@ -15,7 +16,7 @@ add_executable(operators
         src/gradient/sobel.cpp
         include/gradient/sobel.h
         main.cpp
-        src/gradient/gradient_operator.h
+        include/gradient/gradient_operator.h
         src/gradient/alt_sobel.cpp
         include/gradient/alt_sobel.h
         src/utils/image_utils.cpp

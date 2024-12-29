@@ -8,6 +8,8 @@ AltSobel::AltSobel(int kernelSize) : ksize(kernelSize), scale(1), delta(0) {
 }
 
 cv::Mat AltSobel::getEdges(const string &inputPath, const string &outputName) {
+    clock_t t = clock();
+
     cv::Mat image = ImageUtils::getImage(inputPath);
     height = image.rows;
     width = image.cols;
@@ -19,6 +21,9 @@ cv::Mat AltSobel::getEdges(const string &inputPath, const string &outputName) {
     cv::Mat edges = combineGradients(gradX, gradY);
 
     ImageUtils::writeImage(edges, outputName);
+
+    printf("Time taken: %.4fs\n", (float)(clock() - t)/CLOCKS_PER_SEC);
+
     return edges;
 }
 
