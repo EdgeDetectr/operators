@@ -1,5 +1,5 @@
-#ifndef OPERATORS_SOBEL_H
-#define OPERATORS_SOBEL_H
+#ifndef OPERATORS_OCV_SOBEL_H
+#define OPERATORS_OCV_SOBEL_H
 
 #include "gradient_operator.h"
 #include <opencv2/opencv.hpp>
@@ -7,21 +7,21 @@ using namespace std;
 using namespace cv;
 
 /**
- * @file sobel.h
- * @brief This file contains the declaration of the Sobel class.
+ * @file ocv_sobel.h
+ * @brief This file contains the declaration of the OpenCV Sobel class.
  */
-class Sobel : public GradientOperator {
+class OcvSobel : public GradientOperator {
 private:
-    int ksize;  // kernel size for the Sobel operator
+    int ksize;  // kernel size for the OcvSobel operator
     double scale; // scaling factor for the gradient values
     double delta; // offset added to the gradient values
 
 public:
     /**
-     * @brief Constructs a Sobel object.
-     * @param kernelSize The size of the kernel for the Sobel operator. Default is 3.
+     * @brief Constructs a OcvSobel object.
+     * @param kernelSize The size of the kernel for the OcvSobel operator. Default is 3.
      */
-    explicit Sobel(int kernelSize = 3);
+    explicit OcvSobel(int kernelSize = 3);
 
     Mat getEdges(const string& inputPath, const string& outputName) override;
     [[nodiscard]] string getOperatorName() const override;
@@ -65,4 +65,4 @@ private:
     static Mat combineGradients(const Mat& gradX, const Mat& gradY);
 };
 
-#endif //OPERATORS_SOBEL_H
+#endif //OPERATORS_OCV_SOBEL_H

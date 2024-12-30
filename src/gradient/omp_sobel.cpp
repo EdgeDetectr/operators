@@ -1,13 +1,17 @@
-#include "../include/gradient/alt_sobel.h"
+#include "gradient/omp_sobel.h"
 #include "../include/utils/image_utils.h"
 #include "../include/utils/sobel_util.h"
 
-AltSobel::AltSobel(int kernelSize) : ksize(kernelSize), scale(1), delta(0) {
+OmpSobel::OmpSobel(int kernelSize) : ksize(kernelSize), scale(1), delta(0) {
     height = 0;
     width = 0;
 }
 
-cv::Mat AltSobel::getEdges(const string &inputPath, const string &outputName) {
+std::string OmpSobel::getOperatorName() const {
+    return "OpenMP Sobel";
+}
+
+cv::Mat OmpSobel::getEdges(const std::string& inputPath, const std::string& outputName) {
     clock_t t = clock();
 
     cv::Mat image = ImageUtils::getImage(inputPath);
@@ -18,6 +22,7 @@ cv::Mat AltSobel::getEdges(const string &inputPath, const string &outputName) {
     vector<vector<uint8_t>> grayImage = convertToGrayscale(rgbImage);
     vector<vector<int>> gradX = computeGradientX(grayImage);
     vector<vector<int>> gradY = computeGradientY(grayImage);
+
     cv::Mat edges = combineGradients(gradX, gradY);
 
     ImageUtils::writeImage(edges, outputName);
@@ -27,14 +32,11 @@ cv::Mat AltSobel::getEdges(const string &inputPath, const string &outputName) {
     return edges;
 }
 
-string AltSobel::getOperatorName() const {
-    return "AltSobel";
-}
-
-vector<vector<vector<uint8_t>>> AltSobel::convertToRGB(const cv::Mat& input) const {
+vector<vector<vector<uint8_t>>> OmpSobel::convertToRGB(const cv::Mat& input) const {
     vector<vector<vector<uint8_t>>> rgbMatrix(
             height, vector<vector<uint8_t>>(width, vector<uint8_t>(3)));
 
+#pragma omp parallel for default(none) shared(input, rgbMatrix)
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             const auto& pixel = input.at<cv::Vec3b>(i, j);
@@ -47,9 +49,10 @@ vector<vector<vector<uint8_t>>> AltSobel::convertToRGB(const cv::Mat& input) con
     return rgbMatrix;
 }
 
-vector<vector<uint8_t>> AltSobel::convertToGrayscale(const vector<vector<vector<uint8_t>>>& rgbMatrix) const {
+vector<vector<uint8_t>> OmpSobel::convertToGrayscale(const vector<vector<vector<uint8_t>>>& rgbMatrix) const {
     vector<vector<uint8_t>> grayMatrix(height, vector<uint8_t>(width));
 
+#pragma omp parallel for default(none) shared(rgbMatrix, grayMatrix)
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             const auto& pixel = rgbMatrix[i][j];
@@ -64,12 +67,13 @@ vector<vector<uint8_t>> AltSobel::convertToGrayscale(const vector<vector<vector<
     return grayMatrix;
 }
 
-vector<vector<int>> AltSobel::computeGradientX(const vector<vector<uint8_t>>& grayImage) const {
+vector<vector<int>> OmpSobel::computeGradientX(const vector<vector<uint8_t>>& grayImage) const {
     int kernelSize = static_cast<int>(SobelUtil::kernelX.size());
     int offset = kernelSize / 2;
 
     vector<vector<int>> gradX(height, vector<int>(width, 0));
 
+#pragma omp parallel for default(none) shared(gradX, grayImage, kernelSize, offset) shared(SobelUtil::kernelX)
     for (int i = offset; i < height - offset; ++i) {
         for (int j = offset; j < width - offset; ++j) {
             int gradient = 0;
@@ -85,12 +89,13 @@ vector<vector<int>> AltSobel::computeGradientX(const vector<vector<uint8_t>>& gr
     return gradX;
 }
 
-vector<vector<int>> AltSobel::computeGradientY(const vector<vector<uint8_t>>& grayImage) const {
+vector<vector<int>> OmpSobel::computeGradientY(const vector<vector<uint8_t>>& grayImage) const {
     int kernelSize = static_cast<int>(SobelUtil::kernelY.size());
     int offset = kernelSize / 2;
 
     vector<vector<int>> gradY(height, vector<int>(width, 0));
 
+#pragma omp parallel for default(none) shared(gradY, grayImage, kernelSize, offset) shared(SobelUtil::kernelY)
     for (int i = offset; i < height - offset; ++i) {
         for (int j = offset; j < width - offset; ++j) {
             int gradient = 0;
@@ -106,9 +111,10 @@ vector<vector<int>> AltSobel::computeGradientY(const vector<vector<uint8_t>>& gr
     return gradY;
 }
 
-cv::Mat AltSobel::combineGradients(const vector<vector<int>>& gradX, const vector<vector<int>>& gradY) const {
+cv::Mat OmpSobel::combineGradients(const vector<vector<int>>& gradX, const vector<vector<int>>& gradY) const {
     cv::Mat combined(height, width, CV_8UC1);
 
+#pragma omp parallel for default(none) shared(combined, gradX, gradY)
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             int magnitude = static_cast<int>(sqrt(gradX[i][j] * gradX[i][j] + gradY[i][j] * gradY[i][j]));

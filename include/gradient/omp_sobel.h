@@ -1,11 +1,15 @@
-#ifndef OPERATORS_ALT_SOBEL_H
-#define OPERATORS_ALT_SOBEL_H
+#ifndef OPERATORS_OMP_SOBEL_H
+#define OPERATORS_OMP_SOBEL_H
 
-#include "gradient/gradient_operator.h"
+#include <omp.h>
+#include "gradient_operator.h"
 using namespace std;
 using namespace cv;
 
-class AltSobel : public GradientOperator {
+/**
+ * OcvSobel operator based on the Alt OcvSobel operator with OpenMP parallelization.
+ */
+class OmpSobel : public GradientOperator {
 private:
     int ksize;  // kernel size for the OcvSobel operator
     double scale; // scaling factor for the gradient values
@@ -15,10 +19,10 @@ private:
 
 public:
     /**
-     * Constructs an AltSobel object.
+     * Constructs an OmpSobel object.
      * @param kernelSize The size of the kernel for the OcvSobel operator. Default is 3.
      */
-     explicit AltSobel(int kernelSize = 3);
+    explicit OmpSobel(int kernelSize = 3);
 
     /**
      * @brief Detects edges in the input image.
@@ -42,11 +46,11 @@ private:
      * @param input The input image.
      * @return The image in RGB format represented in a 3D vector.
      */
-     vector<vector<vector<uint8_t>>> convertToRGB(const Mat& input) const;
+    vector<vector<vector<uint8_t>>> convertToRGB(const Mat& input) const;
 
     /**
      * @brief Converts the input image to grayscale.
-     * The RGB values are converted to grayscale using the NTSC formula:
+     * The RGB values are converted to grayscale using the National Television System Committee formula:
      * 0.299 ∙ Red + 0.587 ∙ Green + 0.114 ∙ Blue.
      * @param rgbMatrix The input image in RGB format.
      * @return The image in grayscale format represented in a 2D vector.
@@ -77,4 +81,4 @@ private:
 };
 
 
-#endif //OPERATORS_ALT_SOBEL_H
+#endif //OPERATORS_OMP_SOBEL_H

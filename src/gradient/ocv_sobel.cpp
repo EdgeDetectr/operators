@@ -1,13 +1,13 @@
-#include "../include/gradient/sobel.h"
+#include "../include/gradient/ocv_sobel.h"
 #include "../include/utils/image_utils.h"
 
-Sobel::Sobel(int kernelSize) : ksize(kernelSize), scale(1), delta(0) {}
+OcvSobel::OcvSobel(int kernelSize) : ksize(kernelSize), scale(1), delta(0) {}
 
-std::string Sobel::getOperatorName() const {
-    return "Sobel";
+std::string OcvSobel::getOperatorName() const {
+    return "OcvSobel";
 }
 
-cv::Mat Sobel::getEdges(const std::string& inputPath, const std::string& outputName) {
+cv::Mat OcvSobel::getEdges(const std::string& inputPath, const std::string& outputName) {
     clock_t t = clock();
 
     cv::Mat image = ImageUtils::getImage(inputPath);
@@ -23,31 +23,31 @@ cv::Mat Sobel::getEdges(const std::string& inputPath, const std::string& outputN
     return edges;
 }
 
-cv::Mat Sobel::convertToRGB(const cv::Mat& image) {
+cv::Mat OcvSobel::convertToRGB(const cv::Mat& image) {
     cv::Mat rgbImage;
     cv::cvtColor(image, rgbImage, cv::COLOR_BGR2RGB);
     return rgbImage;
 }
 
-cv::Mat Sobel::convertToGrayscale(const cv::Mat &image) {
+cv::Mat OcvSobel::convertToGrayscale(const cv::Mat &image) {
     cv::Mat grayImage;
     cv::cvtColor(image, grayImage, cv::COLOR_RGB2GRAY);
     return grayImage;
 }
 
-cv::Mat Sobel::computeGradientX(const cv::Mat &image) const {
+cv::Mat OcvSobel::computeGradientX(const cv::Mat &image) const {
     cv::Mat gradX;
     cv::Sobel(image, gradX, CV_32F, 1, 0, ksize, scale, delta, cv::BORDER_DEFAULT);
     return gradX;
 }
 
-cv::Mat Sobel::computeGradientY(const cv::Mat &image) const {
+cv::Mat OcvSobel::computeGradientY(const cv::Mat &image) const {
     cv::Mat gradY;
     cv::Sobel(image, gradY, CV_32F, 0, 1, ksize, scale, delta, cv::BORDER_DEFAULT);
     return gradY;
 }
 
-cv::Mat Sobel::combineGradients(const cv::Mat &gradX, const cv::Mat &gradY) {
+cv::Mat OcvSobel::combineGradients(const cv::Mat &gradX, const cv::Mat &gradY) {
     cv::Mat edges;
     cv::magnitude(gradX, gradY, edges);
     cv::normalize(edges, edges, 0, 255, cv::NORM_MINMAX, CV_8U);

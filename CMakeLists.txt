@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(OpenCV REQUIRED)
+find_package(OpenMP REQUIRED)
 
 include_directories(${OpenCV_INCLUDE_DIRS})
 include_directories(cuda)
@@ -13,8 +14,8 @@ include_directories(src)
 
 add_executable(operators
         include/main.h
-        src/gradient/sobel.cpp
-        include/gradient/sobel.h
+        src/gradient/ocv_sobel.cpp
+        include/gradient/ocv_sobel.h
         main.cpp
         include/gradient/gradient_operator.h
         src/gradient/alt_sobel.cpp
@@ -24,8 +25,8 @@ add_executable(operators
         include/utils/sobel_util.h
         src/utils/path_helper.cpp
         include/utils/path_helper.h
-        cuda/gradient/sobel_cuda.cu
-        include/gradient/sobel_cuda.cuh
+        src/gradient/omp_sobel.cpp
+        include/gradient/omp_sobel.h
 )
 
-target_link_libraries(operators ${OpenCV_LIBS})
+target_link_libraries(operators ${OpenCV_LIBS} OpenMP::OpenMP_CXX)
