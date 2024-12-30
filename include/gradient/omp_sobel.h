@@ -46,7 +46,7 @@ private:
      * @param input The input image.
      * @return The image in RGB format represented in a 3D vector.
      */
-    vector<vector<vector<uint8_t>>> convertToRGB(const Mat& input) const;
+    Mat convertToRGB(const Mat& input) const;
 
     /**
      * @brief Converts the input image to grayscale.
@@ -55,21 +55,21 @@ private:
      * @param rgbMatrix The input image in RGB format.
      * @return The image in grayscale format represented in a 2D vector.
      */
-    vector<vector<uint8_t>> convertToGrayscale(const vector<vector<vector<uint8_t>>>& rgbMatrix) const;
+    Mat convertToGrayscale(const Mat& rgbImage) const;
 
     /**
      * @brief Computes the gradient in the x-direction.
      * @param input The input image.
      * @return The gradient in the x-direction.
      */
-    [[nodiscard]] vector<vector<int>> computeGradientX(const vector<vector<uint8_t>>& grayImage) const;
+    [[nodiscard]] Mat computeGradientX(const Mat& grayImage) const;
 
-    /**
-     * @brief Computes the gradient in the y-direction.
-     * @param input The input image.
-     * @return The gradient in the y-direction.
-     */
-    [[nodiscard]] vector<vector<int>> computeGradientY(const vector<vector<uint8_t>>& grayImage) const;
+        /**
+         * @brief Computes the gradient in the y-direction.
+         * @param input The input image.
+         * @return The gradient in the y-direction.
+         */
+    [[nodiscard]] Mat computeGradientY(const Mat& grayImage) const;
 
     /**
      * @brief Combines the gradients in the x and y directions.
@@ -77,8 +77,8 @@ private:
      * @param gradY The gradient in the y-direction.
      * @return The combined gradients.
      */
-    Mat combineGradients(const vector<vector<int>>& gradX, const vector<vector<int>>& gradY) const;
-};
+    Mat combineGradients(const Mat& gradX, const Mat& gradY) const;
+    };
 
 
 #endif //OPERATORS_OMP_SOBEL_H

@@ -1,5 +1,4 @@
 #include <iostream>
-#include <opencv2/imgcodecs.hpp>
 #include "gradient/gradient_operator.h"
 #include "gradient/ocv_sobel.h"
 #include "gradient/alt_sobel.h"
@@ -23,8 +22,11 @@ int main() {
         applyOperator(new OcvSobel(), inputPath, outputPath);
 //        alt sobel
         applyOperator(new AltSobel(), inputPath, outputPath);
-//        openmp sobel
+
+//        openmp sobel - 50% of alt sobel
+        omp_set_num_threads(1);
         applyOperator(new OmpSobel(), inputPath, outputPath);
+
     } catch (const exception& ex) {
         cerr << "Error: " << ex.what() << endl;
         return 1;
