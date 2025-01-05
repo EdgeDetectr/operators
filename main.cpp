@@ -12,21 +12,36 @@ void applyOperator(GradientOperator* operatorPtr, const string& inputPath, const
     delete operatorPtr;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+    if (argc < 4) {
+        cerr << "Usage: operators <operator> <input_path> <output_path>" << endl;
+        return 1;
+    }
+
+    string operatorType = argv[1];
+    string inputPath = argv[2];
+    string outputPath = argv[3];
+
     string projectPath = PathHelper::getProjectPath();
-    string inputPath = projectPath + "/test/gradient/datasets/photo.jpg";
-    string outputPath = "output.png";
-
-//        opencv sobel
-    applyOperator(new OcvSobel(), inputPath, outputPath);
-
-//        alt sobel
-    applyOperator(new AltSobel(), inputPath, outputPath);
-
-//        openmp sobel - 50% of alt sobel
-    omp_set_num_threads(1);
-    applyOperator(new OmpSobel(), inputPath, outputPath);
-
+    try {
+        if (operatorType == "opencv%20sobel") {
+            OcvSobel sobelOperator;
+            sobelOperator.getEdges(inputPath, outputPath);
+        } else if (operatorType == "alternative%20sobel") {
+            AltSobel altSobelOperator;
+            altSobelOperator.getEdges(inputPath, outputPath);
+        } else if (operatorType == "openmp%20sobel") {
+            OmpSobel ompSobelOperator;
+            ompSobelOperator.getEdges(inputPath, outputPath);
+        } else {
+            std::cerr << "Unknown operator: " << operatorType << std::endl;
+            return 1;
+        }
+        std::cout << "Processing completed successfully!" << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return 1;
+    }
 
     return 0;
 }
